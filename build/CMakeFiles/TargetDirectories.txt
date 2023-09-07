@@ -1,0 +1,3 @@
+F:/Dev/C++/CADEX/build/CMakeFiles/CADEX.dir
+F:/Dev/C++/CADEX/build/CMakeFiles/edit_cache.dir
+F:/Dev/C++/CADEX/build/CMakeFiles/rebuild_cache.dir
