@@ -1,4 +1,4 @@
 # CADEX
-Working with curves
+Working with curves.
 
 Project exactly compiled with gcc 11.2.0.
