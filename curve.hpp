@@ -7,9 +7,9 @@
 
 enum curvesType
 {
-    ellipse,
-    circle,
-    helix3D
+    ellipse = 0,
+    circle = 1,
+    helix3D = 2
 };
 
 class Curve
@@ -58,8 +58,7 @@ public:
     std::vector<double> get3Dpoint(const double &t) const override;
     std::vector<double> getFirstDerivative(const double &t) const override;
     double getRadius() const;
-    bool operator<(const Circle &other) const;
-    // double operator-(const Circle &other) const;
+    bool operator<(const Circle *other) const;
 
 protected:
     double radius = 0;

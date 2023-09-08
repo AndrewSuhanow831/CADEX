@@ -3,6 +3,9 @@
 #include <cstdlib>
 #include <ctime>
 #include <algorithm>
+#include <functional>
+#include <iterator>
+
 #include <memory>
 
 #include "curve.hpp"
@@ -24,11 +27,11 @@ double GetRandomNumberDouble(const double &min, const double &max, const int &pr
 
 std::list<Curve*> createListCurvesWithGivenSize(const int &size);
 
-void printCurveCoordinatesOfPoints(const std::list<Curve*> listCurves, const double &parametrT, const bool &printFirstDerivative = false);
+void printCurveCoordinatesOfPoints(const std::list<Curve*> &listCurves, const double &parametrT, const bool &printFirstDerivative = false);
 
-std::list<Circle*> createListWithCircleFromAnother(const std::list<Curve*> listCurves);
+std::list<Circle*> createListWithCircleFromAnother(const std::list<Curve*> &listCurves);
 
-double getTotalSumByRadii(std::list<Circle*> listCircles);
+double getTotalSumByRadii(std::list<Circle*> &listCircles);
 
 // INT MAIN
 /////////////////////
@@ -44,10 +47,7 @@ int main(int, char**)
     std::cout << "FirstDerivative:" << std::endl;
     printCurveCoordinatesOfPoints(listCurves, Pi/4, true);
     std::list<Circle*> listCircles = createListWithCircleFromAnother(listCurves);
-    // std::sort(listCircles.begin(), listCircles.end(), [](Circle *prev, Circle *post)
-    // {
-    //   return (prev < post);
-    // });
+    listCircles.sort(std::less<Circle*>());
     std::cout << "Total sum of radii of all curves in the 'listCircles' " << getTotalSumByRadii(listCircles) 
     << std::endl;
 };
@@ -73,33 +73,46 @@ std::list<Curve*> createListCurvesWithGivenSize(const int &size)
     std::vector<double> vectorArguments(maxCountOfArguments);
     for (int i = 0; i <= size; i++)
     {
-        // std ::cout << typeOfCurve << std::endl;
         for (int j = 0; j < vectorArguments.size(); j++)
         {
           vectorArguments[j] = (GetRandomNumberDouble(MIN_RANDOM_NUMBER_DOUBLE, MAX_RANDOM_NUMBER_DOUBLE, PREC));
         }
         // std::shared_ptr<Curve> curve = nullptr;
         Curve *curve = nullptr;
-        int typeOfCurve = getRandomNumber(0, 3);
-        switch (static_cast<curvesType>(typeOfCurve))
+        bool isValidTypeOfCurve = false;
+
+        static int radius = 0;
+
+        while (!isValidTypeOfCurve)
         {
-        case curvesType::ellipse:
-            curve = new Ellipse(vectorArguments.at(0), vectorArguments.at(1), 
-            vectorArguments.at(2), vectorArguments.at(3));
-            // curve = std::shared_ptr<Curve> (new Ellipse(vectorArguments.at(0), vectorArguments.at(1), 
-            // vectorArguments.at(2), vectorArguments.at(3)));
-            break; 
-        case curvesType::circle:
-            curve = new Circle(vectorArguments.at(0), vectorArguments.at(1), 
-            vectorArguments.at(2));
-            // std::cout << "THIS IS CIRCLE!!!" << std::endl;
-            break; 
-        case curvesType::helix3D:
-            curve = new Helix3D(vectorArguments.at(0), vectorArguments.at(1), 
-            vectorArguments.at(2), vectorArguments.at(3), vectorArguments.at(4));
-            break;
-        default:
-            break;
+          int typeOfCurve = getRandomNumber(0, 2);
+          switch (static_cast<curvesType>(typeOfCurve))
+          {
+          case curvesType::ellipse:
+              curve = new Ellipse(vectorArguments.at(0), vectorArguments.at(1), 
+              vectorArguments.at(2), vectorArguments.at(3));
+              // curve = std::shared_ptr<Curve> (new Ellipse(vectorArguments.at(0), vectorArguments.at(1), 
+              // vectorArguments.at(2), vectorArguments.at(3)));
+              std::cout << "THIS IS ELLIPSE!!!" << std::endl;
+              isValidTypeOfCurve = true;
+              break; 
+          case curvesType::circle:
+              curve = new Circle(radius++, vectorArguments.at(1), 
+              vectorArguments.at(2));
+              // curve = new Circle(vectorArguments.at(0), vectorArguments.at(1), 
+              // vectorArguments.at(2));
+              std::cout << "THIS IS CIRCLE!!!" << std::endl;
+              isValidTypeOfCurve = true;
+              break; 
+          case curvesType::helix3D:
+              curve = new Helix3D(vectorArguments.at(0), vectorArguments.at(1), 
+              vectorArguments.at(2), vectorArguments.at(3), vectorArguments.at(4));
+              std::cout << "THIS IS HELIX3D!!!" << std::endl;
+              isValidTypeOfCurve = true;
+              break;
+          default:
+              break;
+          }
         }
         resultList.push_back(curve);
         vectorArguments.resize(maxCountOfArguments);
@@ -107,7 +120,7 @@ std::list<Curve*> createListCurvesWithGivenSize(const int &size)
     return resultList;
 }
 
-void printCurveCoordinatesOfPoints(const std::list<Curve*> listCurves, const double &parametrT, const bool &printFirstDerivative)
+void printCurveCoordinatesOfPoints(const std::list<Curve*> &listCurves, const double &parametrT, const bool &printFirstDerivative)
 {
     std::list<Curve*>::const_iterator listCurvesIter(listCurves.cbegin());
     while (listCurvesIter != listCurves.cend())
@@ -127,7 +140,7 @@ void printCurveCoordinatesOfPoints(const std::list<Curve*> listCurves, const dou
     }
 }
 
-std::list<Circle*> createListWithCircleFromAnother(const std::list<Curve*> listCurves)
+std::list<Circle*> createListWithCircleFromAnother(const std::list<Curve*> &listCurves)
 {
     std::list<Curve*>::const_iterator listCurvesIter(listCurves.cbegin());
     std::list<Circle*> result;
@@ -147,7 +160,7 @@ std::list<Circle*> createListWithCircleFromAnother(const std::list<Curve*> listC
     return result;
 }
 
-double getTotalSumByRadii(std::list<Circle*> listCircles)
+double getTotalSumByRadii(std::list<Circle*> &listCircles)
 {
     std::list<Circle*>::const_iterator listCirclesIter(listCircles.cbegin());
     double result = 0;

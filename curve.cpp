@@ -71,16 +71,15 @@ double Circle::getRadius() const
     return radius;
 }
 
-bool Circle::operator<(const Circle &other) const
+bool Circle::operator<(const Circle *other) const
 {
+    if (other == nullptr)
+    {
+        return false;
+    }
     double epsilon = pow(10, -9);
-    return ((other.radius - this->radius) > epsilon);
+    return ((other->radius - this->radius) > epsilon);
 }
-
-// double operator-(const Circle &other) const
-// {
-//     return (this->radius - other.radius);
-// }
 
 Helix3D::Helix3D(const double &radius, const double &step, const double &coordinateByX, const double &coordinateByY, const double &coordinateByZ)
     : radius(radius), step(step)
