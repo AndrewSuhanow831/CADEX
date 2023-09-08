@@ -1,20 +1,5 @@
 #include "curve.hpp"
 
-// double Curve::getCoordinateByX() const
-// {
-//     return coordinateByX;
-// }
-
-// double Curve::getCoordinateByY() const
-// {
-//     return coordinateByY;
-// }
-
-// double Curve::getCoordinateByZ() const
-// {
-//     return coordinateByZ;
-// }
-
 std::vector<double> CalculationsByEllipse::get3DpointByEllipse(const double &radiusByX, const double &radiusByY, const double &t)
 {
     std::vector<double> result;

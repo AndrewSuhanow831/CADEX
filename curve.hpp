@@ -19,9 +19,6 @@ public:
     ~Curve() = default;
     virtual std::vector<double> get3Dpoint(const double &t) const = 0;
     virtual std::vector<double> getFirstDerivative(const double &t) const = 0;
-    // virtual double getCoordinateByX() const;
-    // virtual double getCoordinateByY() const;
-    // virtual double getCoordinateByZ() const;
 
 protected:
     double coordinateByX = 0;

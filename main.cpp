@@ -4,9 +4,6 @@
 #include <ctime>
 #include <algorithm>
 #include <functional>
-#include <iterator>
-
-#include <memory>
 
 #include "curve.hpp"
 
@@ -17,13 +14,11 @@
 #define MAX_RANDOM_NUMBER_DOUBLE 5
 #define PREC 9
 
-#define Pi 3.1415926535 
+#define Pi 3.1415926535
 
 int getRandomNumber(const int &min, const int &max);
 
 double GetRandomNumberDouble(const double &min, const double &max, const int &precision);
-
-// template<typename T> T createListCurvesWithGivenSize(const T&, const T&);
 
 std::list<Curve*> createListCurvesWithGivenSize(const int &size);
 
@@ -33,9 +28,6 @@ std::list<Circle*> createListWithCircleFromAnother(const std::list<Curve*> &list
 
 double getTotalSumByRadii(std::list<Circle*> &listCircles);
 
-// INT MAIN
-/////////////////////
-
 int main(int, char**)
 {
     std::srand(std::time(nullptr));
@@ -44,15 +36,15 @@ int main(int, char**)
     std::list<Curve*> listCurves = createListCurvesWithGivenSize(sizeListCurves);
     std::cout << "3D Points:" << std::endl;
     printCurveCoordinatesOfPoints(listCurves, Pi/4);
+    std::cout << "\n";
     std::cout << "FirstDerivative:" << std::endl;
     printCurveCoordinatesOfPoints(listCurves, Pi/4, true);
+    std::cout << "\n";
     std::list<Circle*> listCircles = createListWithCircleFromAnother(listCurves);
     listCircles.sort(std::less<Circle*>());
     std::cout << "Total sum of radii of all curves in the 'listCircles' " << getTotalSumByRadii(listCircles) 
     << std::endl;
 };
-
-/////////////////////
 
 int getRandomNumber(const int &min, const int &max)
 {
@@ -77,12 +69,8 @@ std::list<Curve*> createListCurvesWithGivenSize(const int &size)
         {
           vectorArguments[j] = (GetRandomNumberDouble(MIN_RANDOM_NUMBER_DOUBLE, MAX_RANDOM_NUMBER_DOUBLE, PREC));
         }
-        // std::shared_ptr<Curve> curve = nullptr;
         Curve *curve = nullptr;
         bool isValidTypeOfCurve = false;
-
-        static int radius = 0;
-
         while (!isValidTypeOfCurve)
         {
           int typeOfCurve = getRandomNumber(0, 2);
@@ -91,23 +79,16 @@ std::list<Curve*> createListCurvesWithGivenSize(const int &size)
           case curvesType::ellipse:
               curve = new Ellipse(vectorArguments.at(0), vectorArguments.at(1), 
               vectorArguments.at(2), vectorArguments.at(3));
-              // curve = std::shared_ptr<Curve> (new Ellipse(vectorArguments.at(0), vectorArguments.at(1), 
-              // vectorArguments.at(2), vectorArguments.at(3)));
-              std::cout << "THIS IS ELLIPSE!!!" << std::endl;
               isValidTypeOfCurve = true;
               break; 
           case curvesType::circle:
-              curve = new Circle(radius++, vectorArguments.at(1), 
+              curve = new Circle(vectorArguments.at(0), vectorArguments.at(1), 
               vectorArguments.at(2));
-              // curve = new Circle(vectorArguments.at(0), vectorArguments.at(1), 
-              // vectorArguments.at(2));
-              std::cout << "THIS IS CIRCLE!!!" << std::endl;
               isValidTypeOfCurve = true;
               break; 
           case curvesType::helix3D:
               curve = new Helix3D(vectorArguments.at(0), vectorArguments.at(1), 
               vectorArguments.at(2), vectorArguments.at(3), vectorArguments.at(4));
-              std::cout << "THIS IS HELIX3D!!!" << std::endl;
               isValidTypeOfCurve = true;
               break;
           default:
@@ -127,7 +108,9 @@ void printCurveCoordinatesOfPoints(const std::list<Curve*> &listCurves, const do
     {
         if ((*listCurvesIter) != nullptr)
         {
-            std::vector<double> result = printFirstDerivative ? (*listCurvesIter)->getFirstDerivative(parametrT) : (*listCurvesIter)->get3Dpoint(parametrT);
+            std::vector<double> result = printFirstDerivative 
+            ? (*listCurvesIter)->getFirstDerivative(parametrT) 
+            : (*listCurvesIter)->get3Dpoint(parametrT);
             std::cout << "(";
             for (int i = 0; i < result.size() - 1; i++)
             {
@@ -152,7 +135,6 @@ std::list<Circle*> createListWithCircleFromAnother(const std::list<Curve*> &list
         if (circle != nullptr)
         {
           result.push_back(circle);
-          // std::cout << "succesful cast to circles!" << std::endl;
         }
       }
       ++listCurvesIter;
